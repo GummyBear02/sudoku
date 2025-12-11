@@ -148,7 +148,7 @@ void show_leaderboard(void) {
         printf("Rank | %-20s | Score | Time | Date\n", "Name");
         printf("------------------------------------------------------------\n");
         for (int i = 0; i < m; ++i) {
-            printf("%4d | %-20.20%5d | %5.1f | %s\n",
+            printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
                    i+1, filtered[i].name, filtered[i].score, filtered[i].time_s, filtered[i].date);
         }
         printf("\n");
