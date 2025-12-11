@@ -107,50 +107,92 @@ void show_leaderboard(void) {
     char q[128];
 
     // Tampilan leaderborad + fitur pencarian
+    int first_display = 1;
     while (1) {
-        int show = cnt < TOP ? cnt : TOP;
-        printf("\n===== TOP %d LEADERBOARD =====\n", show);
-        printf("Rank | %-20s | Score | Time | Date\n", "Name");
-        printf("------------------------------------------------------------\n");
-        for (int i = 0; i < show; ++i) {
-        printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
-       i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
+        if (first_display) {
+            int show = cnt < TOP ? cnt : TOP;
+            printf("\n===== TOP %d LEADERBOARD =====\n", show);
+            printf("Rank | %-20s | Score | Time | Date\n", "Name");
+            printf("------------------------------------------------------------\n");
+            for (int i = 0; i < show; ++i) {
+            printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
+           i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
 
-        }
-        printf("\n");
-
-        printf("Kosongkan dan Enter Untuk Ke Menu\n");
-        printf("Cari Nama : ");
-        if (!fgets(q, sizeof(q), stdin)) return;
-        q[strcspn(q, "\n")] = 0;
-
-        if (q[0] == '\0') return;
-
-        Entry filtered[MAX_ENTRIES];
-        int m = 0;
-
-        // Filter leaderboard berdasarkan nama
-        for (int i = 0; i < cnt; ++i) {
-            if (contains_ci(arr[i].name, q)) {
-                filtered[m++] = arr[i];
-                if (m >= MAX_ENTRIES) break;
             }
+            printf("\n");
+            first_display = 0;
         }
 
-        if (m == 0) {
-            printf("Tidak ada entri yang cocok untuk \"%s\".\n\n", q);
+        printf("a. Cari Nama\n");
+        printf("b. Kembali ke Menu\n");
+        printf("Pilih opsi: ");
+        char choice[10];
+        if (!fgets(choice, sizeof(choice), stdin)) return;
+        choice[strcspn(choice, "\n")] = 0;
+        if (choice[0] == 'a' || choice[0] == 'A') {
+            int continue_search = 1;
+            while (continue_search) {
+                printf("Cari Nama: ");
+                if (!fgets(q, sizeof(q), stdin)) return;
+                q[strcspn(q, "\n")] = 0;
+                if (q[0] == '\0') {
+                    printf("Input kosong. Kembali ke menu leaderboard.\n");
+                    continue_search = 0;
+                    break;
+                }
+
+                Entry filtered[MAX_ENTRIES];
+                int m = 0;
+
+                // Filter leaderboard berdasarkan nama
+                for (int i = 0; i < cnt; ++i) {
+                    if (contains_ci(arr[i].name, q)) {
+                        filtered[m++] = arr[i];
+                        if (m >= MAX_ENTRIES) break;
+                    }
+                }
+
+                if (m == 0) {
+                    printf("Tidak ada entri yang cocok untuk \"%s\".\n\n", q);
+                } else {
+                    qsort(filtered, m, sizeof(Entry), cmp);
+
+                    printf("\n===== SEARCH RESULTS for \"%s\" (%d) =====\n", q, m);
+                    printf("Rank | %-20s | Score | Time | Date\n", "Name");
+                    printf("------------------------------------------------------------\n");
+                    for (int i = 0; i < m; ++i) {
+                        printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
+                               i+1, filtered[i].name, filtered[i].score, filtered[i].time_s, filtered[i].date);
+                    }
+                    printf("\n");
+                }
+
+                while (1) {
+                    printf("Cari nama lain? (y/n): ");
+                    char yn[10];
+                    if (!fgets(yn, sizeof(yn), stdin)) return;
+                    yn[strcspn(yn, "\n")] = 0;
+                    if (yn[0] == 'y' || yn[0] == 'Y') {
+                        break;
+                    } else if (yn[0] == 'n' || yn[0] == 'N') {
+                        continue_search = 0;
+                        break;
+                    } else {
+                        printf("Pilihan tidak valid. ");
+                    }
+                }
+            }
+            first_display = 1;
+            #ifdef _WIN32
+            system("cls");
+            #else
+            system("clear");
+            #endif
+        } else if (choice[0] == 'b' || choice[0] == 'B') {
+            return;
+        } else {
+            printf("Pilihan tidak valid. Silakan pilih a atau b.\n");
             continue;
         }
-
-        qsort(filtered, m, sizeof(Entry), cmp);
-
-        printf("\n===== SEARCH RESULTS for \"%s\" (%d) =====\n", q, m);
-        printf("Rank | %-20s | Score | Time | Date\n", "Name");
-        printf("------------------------------------------------------------\n");
-        for (int i = 0; i < m; ++i) {
-            printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
-                   i+1, filtered[i].name, filtered[i].score, filtered[i].time_s, filtered[i].date);
-        }
-        printf("\n");
     }
 }
