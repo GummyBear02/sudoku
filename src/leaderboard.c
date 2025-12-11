@@ -55,6 +55,20 @@ static int contains_ci(const char *haystack, const char *needle) {
     return 0;
 }
 
+// Fungsi untuk menampilkan leaderboard
+void display_leaderboard(const char *title_format, Entry arr[], int cnt) {
+    int show = cnt < TOP ? cnt : TOP;
+    printf("\n");
+    printf(title_format, show);
+    printf("\n");
+    printf("Rank | %-20s | Score |  Time  | Date\n", "Name");
+    printf("-----+----------------------+-------+--------+--------------------\n");
+    for (int i = 0; i < show; ++i) {
+        printf("%4d | %-20.20s | %5d |  %5.1f | %s\n", i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
+    }
+    printf("-----+----------------------+-------+--------+--------------------\n");
+}
+
 // Menampilkan leaderboard + fitur pencarian nama
 void show_leaderboard(void) {
     FILE *fp = fopen("scores.csv", "r");
@@ -110,16 +124,7 @@ void show_leaderboard(void) {
     int first_display = 1;
     while (1) {
         if (first_display) {
-            int show = cnt < TOP ? cnt : TOP;
-            printf("\n  ===== TOP %d LEADERBOARD =====\n", show);
-            printf("Rank | %-20s | Score | Time | Date\n", "Name");
-            printf("----+--------------------+-------+------+-------------------\n");
-            for (int i = 0; i < show; ++i) {
-            printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
-            i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
-
-            }
-            printf("----+--------------------+-------+------+-------------------\n");
+            display_leaderboard("  ===== TOP %d LEADERBOARD =====", arr, cnt);
             first_display = 0;
         }
 
@@ -136,16 +141,7 @@ void show_leaderboard(void) {
             system("clear");
             #endif
             printf("=== MODE PENCARIAN NAMA ===\n");
-            int show = cnt < TOP ? cnt : TOP;
-            printf("\n  ===== TOP %d LEADERBOARD =====\n", show);
-            printf("Rank | %-20s | Score |  Time  | Date\n", "Name");
-            printf("-----+----------------------+-------+--------+-------------------\n");
-            for (int i = 0; i < show; ++i) {
-            printf("%4d | %-20.20s | %5d |  %5.1f | %s\n",
-           i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
-
-            }
-            printf("-----+----------------------+-------+--------+-------------------\n");
+            display_leaderboard("  ===== TOP %d LEADERBOARD =====", arr, cnt);
             int continue_search = 1;
             while (continue_search) {
                 printf("Cari Nama: ");
