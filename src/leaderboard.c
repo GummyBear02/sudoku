@@ -116,7 +116,7 @@ void show_leaderboard(void) {
             printf("------------------------------------------------------------\n");
             for (int i = 0; i < show; ++i) {
             printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
-           i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
+            i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
 
             }
             printf("\n");
@@ -130,6 +130,22 @@ void show_leaderboard(void) {
         if (!fgets(choice, sizeof(choice), stdin)) return;
         choice[strcspn(choice, "\n")] = 0;
         if (choice[0] == 'a' || choice[0] == 'A') {
+            #ifdef _WIN32
+            system("cls");
+            #else
+            system("clear");
+            #endif
+            printf("=== MODE PENCARIAN NAMA ===\n");
+            int show = cnt < TOP ? cnt : TOP;
+            printf("\n===== TOP %d LEADERBOARD =====\n", show);
+            printf("Rank | %-20s | Score | Time | Date\n", "Name");
+            printf("------------------------------------------------------------\n");
+            for (int i = 0; i < show; ++i) {
+            printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
+            i+1, arr[i].name, arr[i].score, arr[i].time_s, arr[i].date);
+
+            }
+            printf("\n");
             int continue_search = 1;
             while (continue_search) {
                 printf("Cari Nama: ");
@@ -162,7 +178,7 @@ void show_leaderboard(void) {
                     printf("------------------------------------------------------------\n");
                     for (int i = 0; i < m; ++i) {
                         printf("%4d | %-20.20s | %5d | %5.1f | %s\n",
-                               i+1, filtered[i].name, filtered[i].score, filtered[i].time_s, filtered[i].date);
+                            i+1, filtered[i].name, filtered[i].score, filtered[i].time_s, filtered[i].date);
                     }
                     printf("\n");
                 }
