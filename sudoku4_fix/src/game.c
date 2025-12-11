@@ -27,7 +27,7 @@ void play_sudoku() {
 
 
     // Penjelasan game
-    printf("\nPenjelasn\n");
+    printf("\nPenjelasan\n");
     printf("Sudoku adalah permainan logika angka yang terdiri dari kotak 4 baris x 4 kolom,\n");
     printf("yang dibagi lagi menjadi empat blok kecil berukuran 2x2.\n");
     printf("Tujuan permainan ini adalah mengisi seluruh kotak dengan angka 1 sampai 4.\n");
